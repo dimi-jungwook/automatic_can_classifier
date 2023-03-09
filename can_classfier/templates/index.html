@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>인공지능 재활용 분리수거 시스템 </title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> 
+   
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+
+            setTimeout("history.go(0)", 1000)
+
+            var data = {
+                "CONTROL": 0, 
+            }
+            var socket = io();
+
+            var postData = function(){
+                socket.emit('my_event', JSON.stringify(data));
+            }
+            window.addEventListener("load", function(evt){
+                console.log("load");
+            });
+            document.getElementById("START").onclick = function (evt) {
+                console.log("start")
+                data.CONTROL = '1';
+                postData();
+            }
+            document.getElementById("STOP").onclick = function (evt) {
+                console.log("stop")
+                data.CONTROL = '0'
+                ;
+                postData();
+            }
+
+        });
+        
+    </script>
+</head>
+<body>
+    <h2>인공지능 리싸이클 캔 자동 분류 시스템</h2>
+    <h3>분류결과</h3>
+    <h1> {{ result }}</h1>
+    <button class="favorite styled" type="button" id="START"> 컨베이어 동작 </button>
+    <button class="favorite styled" type="button" id="STOP"> 컨베이어 멈춤 </button>
+   <div class="col-lg-8  offset-lg-2">
+        <h3 class="mt-5">분리수거 카메라 영상</h3>
+        <img src="{{ url_for('video_feed') }}" >
+    </div>
+</body>
+</html>
